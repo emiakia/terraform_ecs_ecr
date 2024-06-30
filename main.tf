@@ -181,22 +181,22 @@ module "ecs_task_definition" {
 
 # Import the ECS Service module
 module "ecs_service" {
-  source                        = "./modules/ecs_service"
-  ecs_service_name              = var.ecs_service_name
-  ecs_cluster_id                = module.ecs_cluster.cluster_id
-  ecs_task_definition_arn       = module.ecs_task_definition.task_definition_arn
-  ecs_desired_count             = var.ecs_desired_count
-  ecs_launch_type               = var.ecs_launch_type
-  ecs_platform_version          = var.ecs_platform_version
-  subnet_ids                    = data.aws_subnets.default.ids
-  security_group_ids            = [module.security_group.sg_id]
-  ecs_assign_public_ip          = var.ecs_assign_public_ip
-  load_balancer_target_group_arn = module.web_tg.tg_arn #aws_lb_target_group.tg_nginxdemos_hello.arn
-  load_balancer_container_name  = var.load_balancer_container_name 
-  load_balancer_container_port  = var.load_balancer_container_port 
+  source                             = "./modules/ecs_service"
+  ecs_service_name                   = var.ecs_service_name
+  ecs_cluster_id                     = module.ecs_cluster.cluster_id
+  ecs_task_definition_arn            = module.ecs_task_definition.task_definition_arn
+  ecs_desired_count                  = var.ecs_desired_count
+  ecs_launch_type                    = var.ecs_launch_type
+  ecs_platform_version               = var.ecs_platform_version
+  subnet_ids                         = data.aws_subnets.default.ids
+  security_group_ids                 = [module.security_group.sg_id]
+  ecs_assign_public_ip               = var.ecs_assign_public_ip
+  load_balancer_target_group_arn     = module.web_tg.tg_arn #aws_lb_target_group.tg_nginxdemos_hello.arn
+  load_balancer_container_name       = var.load_balancer_container_name
+  load_balancer_container_port       = var.load_balancer_container_port
   ecs_deployment_min_healthy_percent = var.ecs_deployment_min_healthy_percent
   ecs_deployment_max_percent         = var.ecs_deployment_max_percent
-  dependency_resources          = [module.web_listener.web_listener_arn] #[aws_lb_listener.alb_listener.arn]
+  dependency_resources               = [module.web_listener.web_listener_arn] #[aws_lb_listener.alb_listener.arn]
 }
 # ECS Service
 # resource "aws_ecs_service" "nginxdemos_hello_service" {
@@ -267,13 +267,13 @@ module "web_listener" {
 
 # Load Balancer Target Group
 module "web_tg" {
-  source        = "./modules/lb_target_group"
-  lbtg_name     = var.lbtg_name
-  lbtg_port     = var.lbtg_port
-  lbtg_protocol = var.lbtg_protocol
-  lbtg_vpc_id   = data.aws_vpc.default.id
+  source           = "./modules/lb_target_group"
+  lbtg_name        = var.lbtg_name
+  lbtg_port        = var.lbtg_port
+  lbtg_protocol    = var.lbtg_protocol
+  lbtg_vpc_id      = data.aws_vpc.default.id
   lbtg_target_type = var.lbtg_target_type
-  
+
   lbtg_health_check_path     = var.lbtg_health_check_path
   lbtg_health_check_protocol = var.lbtg_health_check_protocol
   lbtg_health_check_matcher  = var.lbtg_health_check_matcher
@@ -302,12 +302,12 @@ module "web_tg" {
 
 # IAM Roles for ECS
 module "iam_role" {
-  source                = "./modules/iam_role"
-  iam_role_name         = var.iam_role_name
-  assume_role_service   = var.assume_role_service
-  policy_version        = var.policy_version
-  policy_action         = var.policy_action
-  policy_effect         = var.policy_effect
+  source              = "./modules/iam_role"
+  iam_role_name       = var.iam_role_name
+  assume_role_service = var.assume_role_service
+  policy_version      = var.policy_version
+  policy_action       = var.policy_action
+  policy_effect       = var.policy_effect
 }
 # resource "aws_iam_role" "ecs_task_execution_role" {
 #   name = "ecs_task_execution_role"
@@ -326,9 +326,9 @@ module "iam_role" {
 
 # Import IAM Role Policy Attachment module
 module "iam_role_policy_attachment" {
-  source      = "./modules/iam_role_policy_attachment"
-  policy_arn  = var.policy_arn
-  role_name   = module.iam_role.iam_role_name
+  source     = "./modules/iam_role_policy_attachment"
+  policy_arn = var.policy_arn
+  role_name  = module.iam_role.iam_role_name
 }
 
 # resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
@@ -349,12 +349,12 @@ module "iam_instance_profile" {
 
 #
 module "iam_ecs_instance_role" {
-  source                = "./modules/iam_role"
-  iam_role_name         = var.iam_ecs_instance_role_name
-  assume_role_service   = var.assume_role_service
-  policy_version        = var.policy_version
-  policy_action         = var.policy_action
-  policy_effect         = var.policy_effect
+  source              = "./modules/iam_role"
+  iam_role_name       = var.iam_ecs_instance_role_name
+  assume_role_service = var.assume_role_service
+  policy_version      = var.policy_version
+  policy_action       = var.policy_action
+  policy_effect       = var.policy_effect
 }
 
 # resource "aws_iam_role" "ecs_instance_role" {
@@ -374,9 +374,9 @@ module "iam_ecs_instance_role" {
 
 
 module "iam_role_instance_policy_attachment" {
-  source      = "./modules/iam_role_policy_attachment"
-  policy_arn  = var.instance_policy_arn
-  role_name   = module.iam_ecs_instance_role.iam_role_name
+  source     = "./modules/iam_role_policy_attachment"
+  policy_arn = var.instance_policy_arn
+  role_name  = module.iam_ecs_instance_role.iam_role_name
 }
 
 # resource "aws_iam_role_policy_attachment" "ecs_instance_policy" {

@@ -339,7 +339,7 @@ variable "alb_enable_deletion_protection" {
 variable "alb_tags" {
   description = "Tags to assign to the Application Load Balancer"
   type        = map(string)
-  default     = {
+  default = {
     "Purpose" = "Test By Terraform For ALB"
   }
 }
@@ -366,7 +366,7 @@ variable "lblst_default_action_type" {
 variable "lblst_default_action_target_group_arn" {
   description = "The ARN of the target group for the default action of the Load Balancer Listener"
   type        = string
-  default     = ""  # Set a default value if needed, otherwise keep it empty
+  default     = "" # Set a default value if needed, otherwise keep it empty
 }
 
 
@@ -421,18 +421,18 @@ variable "lbtg_protocol" {
 variable "lbtg_vpc_id" {
   description = "The VPC ID where the Target Group is deployed"
   type        = string
-  default     = ""  # Set a default value if needed, otherwise keep it empty
+  default     = "" # Set a default value if needed, otherwise keep it empty
 }
 variable "lbtg_target_type" {
   description = "Target Type"
   type        = string
-  default     = "ip" 
+  default     = "ip"
 }
 
 variable "lbtg_tags" {
   description = "Tags to assign to the Target Group"
   type        = map(string)
-  default     = {
+  default = {
     "Purpose" = "Test By Terraform For ALB"
   }
 }
