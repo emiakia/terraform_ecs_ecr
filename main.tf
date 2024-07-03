@@ -55,7 +55,6 @@ module "ecs_cluster" {
   source       = "./modules/ecs_cluster"
   cluster_name = var.ecs_cluster_name
 }
-
 # ECS Cluster
 # resource "aws_ecs_cluster" "MyECSCluster" {
 #   name = "MyECSCluster"  # Replace with variable if needed
