@@ -1,67 +1,65 @@
-# ECS Cluster with Fargate and EC2 Instances
+# Modular ECS Cluster with Fargate and EC2 Instances
 
 ## Overview
 
-This Terraform configuration sets up an Amazon ECS (Elastic Container Service) environment with both Fargate and EC2 launch types. It includes:
+This Terraform configuration is designed to set up an Amazon ECS (Elastic Container Service) environment using a fully modular structure. It supports both Fargate and EC2 launch types, ensuring flexibility and scalability. The configuration includes:
 
-- **ECS Cluster**: Named `MyECSCluster`.
-- **Auto Scaling Group**: Manages EC2 instances with a maximum of 3 instances, on-demand provisioning.
-- **EC2 Instances**: Uses Amazon Linux 2 (kernel 5.10) with `t2.micro` instance type.
-- **Task Definition**: Configured for both Fargate and EC2 launch types.
-- **Service**: Uses AWS Fargate with a specified deployment configuration.
-- **Application Load Balancer (ALB)**: Distributes traffic to ECS services with health checks.
+- **ECS Cluster**: Created using a modular approach for easy management.
+- **Auto Scaling Group**: Manages EC2 instances with customizable settings.
+- **EC2 Instances**: Configured through a modular launch configuration using Amazon Linux 2 and `t2.micro` instance type.
+- **Task Definition**: Supports both Fargate and EC2, with modular container definitions.
+- **ECS Service**: Deployed using AWS Fargate with specific deployment configurations.
+- **Application Load Balancer (ALB)**: Distributes traffic to ECS services, with modular configuration for health checks and target groups.
 
 ## Components
 
-1. **ECS Cluster**
-   - Creates an ECS Cluster named `MyECSCluster`.
+1. **ECS Cluster (Module: `ecs_cluster`)**
+   - Creates an ECS Cluster with a customizable name.
    - Supports both Fargate and EC2 launch types.
 
-2. **Auto Scaling Group**
-   - Configures an Auto Scaling Group with:
-     - Desired capacity: 0
-     - Minimum capacity: 0
-     - Maximum capacity: 3
-   - Uses an Amazon Linux 2 AMI with `t2.micro` instances.
-   - Configures the ECS agent on EC2 instances to join the `MyECSCluster`.
+2. **Auto Scaling Group (Module: `autoscaling_group`)**
+   - Configures an Auto Scaling Group with the following default settings:
+     - Desired capacity: `0`
+     - Minimum capacity: `0`
+     - Maximum capacity: `3`
+   - Utilizes a modular launch configuration to define EC2 instance settings.
+   - Configured to work seamlessly with the ECS Cluster.
 
-3. **EC2 Launch Configuration**
-   - Uses Amazon Linux 2 (kernel 5.10).
-   - `t2.micro` instance type.
-   - Attaches a security group allowing inbound HTTP traffic on port 80.
+3. **EC2 Launch Configuration (Module: `launch_configuration`)**
+   - Uses Amazon Linux 2 with a customizable instance type (default: `t2.micro`).
+   - Attaches a security group module allowing inbound HTTP traffic on port 80.
+   - Initializes the ECS agent on EC2 instances to join the specified ECS Cluster.
 
-4. **Task Definition**
-   - Family name: `nginxdemos-hello`.
-   - Supports both Fargate and EC2 launch types.
-   - Container: `nginxdemos/hello`.
-   - CPU: 0.5 vCPU allocated, with a limit of 1 vCPU.
-   - Memory: 3GB allocated, with a limit of 3GB.
+4. **Task Definition (Module: `ecs_task_definition`)**
+   - Defines the ECS task, supporting both Fargate and EC2 launch types.
+   - Configurable resources including CPU (default: `512` units) and memory (default: `3072` MB).
+   - Modular container definition with support for multiple containers if needed.
 
-5. **ECS Service**
-   - Launch type: Fargate.
-   - Platform version: `LATEST`.
-   - Deployment configuration: Replica with 1 desired task.
-   - Connects to the ALB with a target group.
+5. **ECS Service (Module: `ecs_service`)**
+   - Manages the ECS Service with the following default settings:
+     - Launch type: `FARGATE`
+     - Platform version: `LATEST`
+     - Desired task count: `1`
+   - Configured to work with an ALB module for traffic distribution.
 
-6. **Application Load Balancer (ALB)**
-   - Name: `albForECS`.
-   - Listens on port 80 with HTTP protocol.
-   - Forward requests to the ECS service.
-   - Health checks on path `/` with a delay of 300 seconds.
+6. **Application Load Balancer (Module: `alb`)**
+   - Configures an ALB to distribute incoming HTTP traffic on port 80.
+   - Integrated with the ECS Service module for seamless operation.
+   - Modular target group and health check configurations to ensure high availability.
 
 ## How It Works
 
-- **ECS Cluster**: Serves as the logical grouping for the services and tasks.
-- **Auto Scaling Group**: Ensures there are up to 3 EC2 instances available for running tasks if required. It uses a Launch Configuration to define instance settings.
-- **Task Definition**: Defines how tasks should run, including CPU and memory limits, and the container image to use.
-- **ECS Service**: Manages the desired number of running tasks based on the task definition.
-- **Application Load Balancer**: Routes incoming HTTP traffic to the ECS service and performs health checks to ensure traffic is only routed to healthy instances.
+- **ECS Cluster**: Acts as the logical grouping for tasks and services, configured through a dedicated module.
+- **Auto Scaling Group**: Dynamically manages EC2 instances to meet the desired capacity, defined by a modular launch configuration.
+- **Task Definition**: Provides a flexible and modular approach to define how containers should run, with options for both Fargate and EC2.
+- **ECS Service**: Ensures that the desired number of tasks are running, leveraging the modular ALB for load balancing.
+- **Application Load Balancer**: Routes incoming traffic to the ECS service and performs health checks, all configured within a modular setup.
 
 ## Usage
 
 1. **Initialize Terraform**
 
-   Navigate to the directory containing your Terraform configuration and run:
+   Navigate to the root directory of your Terraform configuration and run the following commands to deploy the infrastructure:
 
    ```bash
    terraform init
