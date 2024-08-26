@@ -3,7 +3,7 @@ resource "aws_lb_target_group" "web_tg" {
   port     = var.lbtg_port
   protocol = var.lbtg_protocol
   vpc_id   = var.lbtg_vpc_id
-
+  target_type = var.lbtg_target_type
   health_check {
     path                = var.lbtg_health_check_path
     protocol            = var.lbtg_health_check_protocol

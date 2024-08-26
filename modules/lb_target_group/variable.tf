@@ -11,3 +11,4 @@ variable "lbtg_health_check_interval" {}
 variable "lbtg_health_check_timeout" {}
 variable "lbtg_healthy_threshold" {}
 variable "lbtg_unhealthy_threshold" {}
+variable "lbtg_target_type" {}
