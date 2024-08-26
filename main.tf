@@ -372,7 +372,6 @@ module "iam_ecs_instance_role" {
 #   })
 # }
 
-
 module "iam_role_instance_policy_attachment" {
   source      = "./modules/iam_role_policy_attachment"
   policy_arn  = var.instance_policy_arn
